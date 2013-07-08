@@ -42,7 +42,13 @@
 			_this.ninja();
 
 		},
-
+		/**
+		 * Muestra un div amarillo
+		 * con una notificación
+		 * que dura 3 segundos por default
+		 * @msg: el mensaje a mostrar
+		 * @timeout: el tiempo en milisegundos que dure el mensaje
+		 */
 		alert: function( msg, timeout )
 		{
 			var _this = this;
@@ -52,6 +58,9 @@
 				'min-width':'300px'
 			}).text(msg).prependTo(_this.$el)
 			.css({
+				/*
+				 * Estilos para cartel amarillito
+				 */
 				position:'absolute',
 				'z-index': 10000 + n_notifications,
 				display:'none',
@@ -66,25 +75,29 @@
 				'float':'right',
 				'cursor':'pointer'
 			}).click(function(){
-				a();
+				cerrar_alert();
 			}).appendTo($boy);
-		
-			function a()
-			{
-				$boy.slideUp('fast');
-				$boy.remove();
-			}
-			if (timeout === undefined) {
-				setTimeout(a, 3000);
-			} else {
-				setTimeout(a, timeout);
-			}
-			
 
-			if (window.console !== undefined) {
+
+			if (timeout === undefined) {
+				timeout = 3000;
+			}
+			setTimeout(cerrar_alert, timeout);
+			
+			/*
+			 * Muestro en consola los mensaje
+			 * si debug==true
+			 */
+			if (_this.debug && window.console !== undefined) {
 				console.log('idera.jquery ' + msg);
 
 			} 
+		
+			function cerrar_alert()
+			{
+				$boy.slideUp('fast');
+				$boy.remove();
+			}			
 			
 		},
 		/**
