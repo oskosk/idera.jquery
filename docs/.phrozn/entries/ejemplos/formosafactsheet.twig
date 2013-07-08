@@ -1,0 +1,138 @@
+layout: ejemplos.twig
+---
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<script type="text/javascript" src="http://ign.gob.ar/argenmap2/argenmap.jquery/argenmap.jquery.min.js"></script>
+<script type="text/javascript" src="{{this.baseurl}}/idera.jquery.js"></script>
+<script>
+$(function() {
+	//El div tiene id="mapa"
+	$('#mapa1').argenmap().centro(-24.715142351509666, -59.927268652054565).zoom(7);
+	$('#mapa2').idera('ideformosa').mapa('upca:upca_prov_redhidrom');
+	$('#mapa3').idera('ideformosa').mapa('dec:dec_prov_censo2010xdpto');	
+
+
+});
+</script>
+</head>
+<body>
+	<div class="container">
+			<p class="lead">
+			  <a class="brand">idera.jquery &raquo;</a> En este ejemplo se crea una página con información de la provincia de Formosa
+			  utilizando el <strong>widget mapa</strong> para representar algunos de los datos
+			  de la de la Infraestructura de datos Espaciales de la provincia de Formosa.
+			</p>	
+			<p>
+				La información fue obtenida de <a target="_blank" href="http://es.wikipedia.org/wiki/Provincia_de_Formosa#Poblaci.C3.B3n">Wikipedia</a>
+			<p>
+				Tené en cuenta que la estilización de la tabla corre por tu cuenta. En este ejemplo, uso este css<br/>
+				<code>//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css</code>.
+			</p>
+			<p>
+			<a href="javascript:(function(){window.location='view-source:'+window.location})()">Ver el código fuente!</a>
+			</p>
+		<div class="page-header">
+			<h2>Provincia de Formosa</h2>
+		</div>
+		<div class="row">
+		</div>
+		<div class="row">
+			<div class="span8">
+				<p>
+				  Formosa es una provincia argentina, situada en la Región del Norte Grande Argentino. Limita al oeste con la provincia de Salta, al sur con Chaco y al este y al norte con Paraguay.
+				</p>			
+				<p>
+				Se extiende entre los paralelos 22° y 27° de latitud sur y los meridianos 57° y 63° de longitud oeste de Greenwich. Es atravesada, en su zona norte, por el trópico de Capricornio que la ubica en la región tropical del país. Ocupa gran parte del Chaco Central, conocido hasta principios de siglo XX también con el nombre de Llanos del Manso.			  
+				</p>			
+				<h3>Etimología</h3>
+				<p>
+					Formosa deriva del español antiguo fermosa, que significa «hermosa» y que habría sido dado por los conquistadores españoles a una curva de gran belleza al navegar por el río Paraguay que veían cuando iban o venían de Asunción hacia España; que con el pasar del tiempo a esa zona se la comenzó a nombrar como Vuelta Fermosa.[cita requerida]
+				</p>
+				<p>
+					Por coincidencia, la antípoda de la punta norte de Taiwán, que también fue llamado en su momento Formosa, coincide con la frontera norte de la provincia de Formosa.
+				</p>
+			</div><!--span8-->
+			<div class="span4">
+				<div id="mapa1" style="height:400px"></div>
+				<div>Provincia de Formosa</div>				
+			</div>			
+		</div><!--row-->
+		<div class="row">
+			<div class="span8">				
+				<h3>Geografía</h3>
+				<p>
+					Integra la zona geográfica conocida como Región Chaqueña. Posee una uniformidad de relieve con una suave inclinación noroeste-sudeste, los ríos y arroyos aunque en ocasiones divagantes y formando esteros siguen también la dirección noroeste-sudeste; el bioma casi exclusivo es el del bosque chaqueño.
+				</p>	
+			</div><!--span-->
+
+		</div><!--row-->							
+		<div class="row">
+			<div class="span4">
+				<div id="mapa2" style="height:400px;float:right"></div>		
+				<div>Recursos Hídricos de la Provincia de Formosa</div>		
+			</div>
+			<div class="span8">
+				<div class="page-header">
+					<h4>Recursos hídricos</h4>
+				</div>
+				
+				
+				<p>
+					El clima provincial es semitropical. Hacia el este, las lluvias son uniformes durante todo el año, llegando a orillas del río Paraguay a superar los 1200 mm anuales. Allí, el tipo climático local es semitropical semiestépico.
+				</p>
+				<p>
+					Las localidades del territorio, cuanto más hacia el oeste se encuentran presentan una estación seca invernal más neta, con lluvias en la temporada cálida, que en el límite con Salta suman solo 600 mm anuales. Allí, el tipo climático local es semitropical continental.
+				</p>
+				<p>
+					Durante el verano, que en la provincia es largo y caluroso, las temperaturas ascienden a más de 45 °C en todo el territorio, mientras que en el invierno, en algunos días suele descender hasta los 6 °C por acción del viento pampero.
+				</p>
+				<p>
+					El viento norte es otro de los rasgos distintivos de la región, que sopla con fuerza a partir de fines de agosto hasta principios de abril; es un viento cálido y húmedo, y afecta a la población provocando cambios en el estado de ánimo.
+				</p>
+				<p>
+					La desigual humedad determina diferencias en la vegetación. Cerca de los ríos se desarrolla la selva en galería, con ejemplares como el algarrobo, palo amarillo y palo santo. Hacia el oeste aparece el bosque chaqueño donde crece el quebracho colorado y quebracho blanco, el lapacho, el urunday, el guayaybí, la espina corona, la guaraniná, el palo lanza, el ibirá-pitá, el urunday, el palo blanco, el timbó y las palmeras yatay y pindó.
+				</p>
+				<p>
+					En el límite con la provincia de Salta se encuentra el área conocida como El Impenetrable.
+				</p>
+				
+			</div><!--span8-->
+		</div><!--row-->
+		<div class="row">
+
+			<div class="span8">
+				<div class="page-header">				
+					<h4>Población</h4>
+				</div>
+				<ul>
+					<li>Censo 1991: 398.413 habitantes (INDEC, 1991) (población urbana:270.061 habitantes (INDEC, 1991)) (población rural:128.352 habitantes (INDEC, 1991)).</li>
+					<li>Censo 2001 : 485.700 habitantes (INDEC, 2001) (población urbana:375.153 habitantes (INDEC, 2001), población rural:110.547 habitantes (INDEC, 2001)).</li>
+					<li>Censo nacional 2010 : 527.895 habitantes (INDEC, 2010)</li>				
+				</ul>
+				<p>
+					Según los datos del Censo 2010, la población provincial ascendía a un total de 527.895 habitantes. La población se encuentra desigualmente distribuida. El grueso de los habitantes se concentra en el oriente provincial, a orillas del río Paraguay. La densidad de población desciende de este a oeste, aunque repunta levemente en el extremo occidental, en los departamentos limítrofes con la provincia de Salta.
+				</p>
+				<p>
+					Dos elementos intervienen principalmente en la población de la provincia, el indígena y el europeo. El primero, autóctono, constituía la totalidad de la población hasta fines del siglo XIX, cuando el hombre blanco comenzó a explorar la región. Los indígenas se resistieron tenazmente, lo que motivó que el ejército argentino lanzara una serie de operaciones militares para someterlos. Las consecuencias de esta campaña aún hoy se notan: una excesiva concentración de la tierra en manos de blancos, mientras la población indígena aún reclama que se le otorguen territorios que habitan desde tiempos ancestrales.
+				</p>
+			</div><!--span8-->
+			<div class="span4">
+				<div id="mapa3" style="height:400px;float:right"></div>				
+				<div>Censo 2010 por departamentos de la Provincia de Formosa</div>						
+			</div>			
+		</div><!--row-->		
+
+	</div>
+
+
+
+
+
+
+
+</body>
+</html>

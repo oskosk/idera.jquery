@@ -1,0 +1,12 @@
+h1. tota
+
+Formosa es una provincia argentina, situada en la Región del Norte Grande Argentino. Limita al oeste con la provincia de Salta, al sur con Chaco y al este y al norte con Paraguay.
+<div id="mapa1">tu hermana</div>
+Se extiende entre los paralelos 22° y 27° de latitud sur y los meridianos 57° y 63° de longitud oeste de Greenwich. Es atravesada, en su zona norte, por el trópico de Capricornio que la ubica en la región tropical del país. Ocupa gran parte del Chaco Central, conocido hasta principios de siglo XX también con el nombre de Llanos del Manso.
+
+Es la provincia argentina más pobre,3 la de menor desarrollo humano4 y la segunda de menor PBG per cápita del país, al superar a la vecina provincia del Chaco.5 El 17 % de la población provincial es indigente, mientras que el 42 % de la población vive bajo la línea de pobreza.6 Según datos generados por la Encuesta Permanente de Hogares que realiza el INDEC, en 2010 la Ciudad de Formosa tuvo el segundo índice de desempleo más bajo del país con un 2,2 %.7
+
+
+<script type="text/javascript">
+alert('ad');
+</script>

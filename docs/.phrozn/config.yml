@@ -1,0 +1,10 @@
+--- # Site configuration
+baseurl:  'http://mapa.ign.gob.ar/idera.jquery'
+docurl: 'http://mapa.ign.gob.ar/idera.jquery/docs'
+entries:
+    layout: default.twig
+    baseurl: tota
+    #baseurl:  http://mapa.ign.gob.ar/idera.jquery
+
+# Files to skip - list of preg expressions is expected
+skip: [/\.swp$/, /\.bak$/, /.DS_Store/]

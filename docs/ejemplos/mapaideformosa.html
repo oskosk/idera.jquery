@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<script type="text/javascript" src="http://ign.gob.ar/argenmap2/argenmap.jquery/argenmap.jquery.min.js"></script>
+<script type="text/javascript" src="http://mapa.ign.gob.ar/idera.jquery/idera.jquery.js"></script>
+
+<script>
+$(function() {
+	//El div tiene id="mapa"
+	$('#mapa').idera('ideformosa').mapa('dgct:dgct_prov_parrurales');
+
+	
+});
+</script>
+</head>
+<body>
+<h3>Una mapa con una capa de IDERA</h3>
+
+<h4>Capa publicada por la Infraestructura de Datos de la provincia de Formosa</h4>
+<div id="mapa" style="overflow:auto;width:80%;margin:auto;height:400px"></div>
+
+<p>
+  En este ejemplo se crea un mapa con una de las capas WMS (la capa de nombre <em>dgct:dgct_prov_parrurales</em>) de la Infraestructura de datos Espaciales de la provincia de Formosa.
+</p>
+<p>
+	Tené en cuenta que la estilización de la tabla corre por tu cuenta. En este ejemplo, uso este css<br/>
+	<code>//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css</code>.
+</p>
+<p>
+<a href="javascript:(function(){window.location='view-source:'+window.location})()">Ver el código fuente!</a>
+</p>
+
+</body>
+</html>

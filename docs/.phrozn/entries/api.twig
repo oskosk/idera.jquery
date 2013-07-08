@@ -1,0 +1,195 @@
+<div class="content">
+  <h2>API </h2>
+  </section>
+  <section id="eventos">
+    <h3>Uso básico</h3>
+
+    <div class="text-center">
+      <p>
+        <code class="lead">$('div#mapa')<span data-toggle="chardinjs" data-intro="Se carga idera.jquery" data-position="top" >.idera</span>(<span data-toggle="chardinjs" data-intro="Se le pide que cargue la información del WMS con identificador 'ideformosa'" data-position="bottom" >'ideformosa'</span>)<span data-toggle="chardinjs" data-intro="Se crea el widget mapa" data-position="top">.mapa</span>(<span data-toggle="chardinjs" data-intro="Se le pide que despliegue una capa específica sobre el mapa" data-position="bottom">'upca:upca_prov_cuencashid'</span>);</code>
+      </p>
+      <p>
+        <a class="btn btn-info" href="javascript:$('body').chardinJs('start')">Ver detalle</a>
+      </p>
+    </div>
+    <p class="lead"text-center">
+      Podés encontrar el listado de identificadores para cada WMS en <a href="datosdeidera.html">Datos de la IDE</a>.
+    </p>
+
+  </section>      
+  <section id="idera">
+    <h3>Métodos</h3>    
+    <div class="row">
+      <div class="span4">
+        <h4>idera()</h4>
+           
+      </div><!--span4-->
+      <div class="span8">
+        <h5 id="idera">idera(opciones:Object|string)</h5>
+        <div class="well well-small">
+          <p>
+            <strong>Este método se llama una sola vez.</strong><br/>
+            Inicializa un elemento html para poder ser transformado en algún widget de idera a través de los widgets.
+          </p>
+          <p>
+             Todos los demás métodos se usan después de usar éste
+             y pueden concatenarse
+             <code>$('#autocomplete').idera().autocompleteDeCapas()</code>
+          </p>
+          <dl>
+            <dt>opciones</dt>
+            <dd>
+              (<em>objeto simple, opcional</em>): Si <code>opciones</code> no es una string,
+              se interpreta como pares de key/valor que configuran opciones
+              extra para el comportamiento del plugin:<br/>
+              <dl class="dl-horizontal">
+                <dt>id_servicio_wms</dt>
+                <dd>(<em>string</em>). El identificador de uno de los nodos WMS de IDERA. La lista de identificadores
+                  la podés encontrar en <a href="datosdeidera.html">Datos de IDERA</a>.</dd>                                
+                <dt>debug</dt>
+                <dd>(<em>boolean</em>). Si es true, el plugin es más verborrágio en la consola. 
+                  El valor predeterminado es false.</dd>                
+              </dl>
+            </dd>
+            <dt>opciones</dt>
+            <dd>
+              (<em>string, opcional</em>): Si <code>opciones</code> es una string,
+              se toma como el identificador de uno de los nodos WMS de IDERA.
+              Es una manera rápida de hacer lo mismo que pasando la propiedad <code>id_servicio_wms</code>
+              cuando <code>opciones</code> se pasa como objeto.
+            </dd>
+
+          </dl>           
+        </div>            
+      </div><!--span8-->
+    </div><!--row-->
+
+  </section>
+  <section id="widgets">
+    <div class="row">
+      <div class="span4">
+        <h4>Widgets</h4>
+        <p>
+          <ul>
+              <li><a href="#mapa">mapa()</a></li>                
+              <li><a href="#autocompleteDeCapas">autocompleteDeCapas()</a></li>
+              <li><a href="#tablaDeCapasWMS">tablaDeCapasWMS()</a></li>
+              <li><a href="#tablaDeServiciosWMS">tablaDeServiciosWMS()</a></li>
+              <li><a href="#prosa">prosa()</a></li>
+              
+          </ul>
+        </p>            
+      </div><!--span4-->
+      <div class="span8 ">
+        <h5 id="mapa">mapa(capa:string)</h5>
+        <div class="well well-small">
+          <p>Con <code>.mapa()</code>
+              para mostrar una tabla con todas las Capas WMS que conforman la IDERA.</p>
+          <dl>
+            <dt>capa</dt>
+              <dd>(<em>string</em>): El nombre de la capa que se quiere superponer sobre el mapa</dd>
+          </dl> 
+          <p class="alert alert-info">El servicio WMS tiene que estar configurado
+            para poder generar las imágenes con el sistema de referencia
+            <code>EPSG:3857</code>
+            que es el código que define la proyección de OpenStreetMap, Google Maps,
+            Bing Maps, ESRI WEB Maps y demás mapas web populares.</p>          
+        </div>           
+      </div><!--span8-->          
+    </div><!--row-->
+    <div class="row">
+      <div class="span8 offset4">
+        <h5 id="tablaDeCapasWMS">tablaDeCapasWMS()</h5>
+        <div class="well well-small">
+          <p>Luego de llamar a idera(), puede usarse
+              <code>.tablaDeCapasWMS()</code>
+              para mostrar una tabla con las capas WMS de uno de los servicios WMS de la IDERA.</p>
+        </div>           
+      </div><!--span8-->
+    </div><!--row-->
+      <div class="row">
+      <div class="span8 offset4">
+        <h5 id="prosa">prosa()</h5>
+        <div class="well well-small">
+          <p>Luego de llamar a idera(), puede usarse
+              <code>.prosa()</code>
+              para mostrar un texto descriptivo con la información declarado por un servicios WMS de la IDERA.</p>
+        </div>           
+      </div><!--span8-->
+    </div><!--row-->  
+  </section>
+  <section id="eventos">
+    <div class="row">
+      <div class="span4">
+        <h4>eventos</h4>
+        <p>
+          <ul>
+              <li><a href="#idera.afterWMSCapabilitiesParsed">idera.afterWMSCapabilitiesParsed</a></li>
+              <li><a href="#idera.afterWMSLayerParsed">idera.afterWMSLayerParsed</a></li>
+          </ul>
+        </p>            
+      </div><!--span4-->
+      <div class="span8 ">
+        <h5 id="idera.afterWMSCapabilitiesParsed">idera.afterWMSCapabilitiesParsed</h5>
+        <div class="well well-small">
+          <p>Este evento se dispara apenas se termina de parsear un documento capabilities completo.
+          <p>
+              La función de callback que se le pasa a .on() recibe el objeto parseado como par de key/values en sus segundo parámetro.
+          </p>
+          
+          <dl>
+            <dt>capabilities</dt>
+              <dd>(<em>objeto simple</em>): Las propiedades del servicio WMS en un objeto simple.</dd>
+          </dl> 
+        </div>           
+      </div><!--span8-->          
+    </div><!--row-->
+    <div class="row">
+      <div class="span8 offset4">
+        <h5 id="idera.afterWMSLayerParsed">idera.afterWMSLayerParsed</h5>
+        <div class="well well-small">
+          <p>Se dispara apenas se termina de parsear una capa WMS a partir del elemento
+          XML que la representa en un documento capabilities que está siendo parseado.
+          </p>
+          <p>
+              La función de callback que se le pasa a .on() recibe el objeto parseado como par de key/values en sus segundo parámetro.
+          </p>
+
+          
+          <dl>
+            <dt>capa</dt>
+              <dd>(<em>objeto simple</em>): Las propiedades de la capa WMS recién analizada en un objeto simple.</dd>          </dl> 
+        </div>           
+      </div><!--span8-->
+    </div><!--row-->
+    <div class="row">
+      <div class="span4">
+        <h4>Eventos de autocompleteDeCapas</h4>
+        <p>
+          <ul>
+              <li><a href="#idera.afterWMSLayerParsed">idera.autocomplete.cambioSeleccion</a></li>
+          </ul>
+        </p>            
+      </div><!--span4-->
+      <div class="span8 ">
+        <h5 id="idera.afterWMSCapabilitiesParsed">idera.autocomplete.cambioSeleccion</h5>
+        <div class="well well-small">
+          <p>Este evento se dispara apenas se termina de parsear un documento capabilities completo.
+          <p>
+              La función de callback que se le pasa a .on() recibe el objeto parseado como par de key/values en sus segundo parámetro.
+          </p>
+          
+          <dl>
+            <dt>capabilities</dt>
+              <dd>(<em>objeto simple</em>): Las propiedades del servicio WMS en un objeto simple.</dd>
+          </dl> 
+        </div>           
+      </div><!--span8-->          
+    </div><!--row-->
+  </section>  
+
+
+ 
+</div>
+<link href="http://heelhook.github.io/chardin.js/chardinjs.css" rel="stylesheet">
+<script src="http://heelhook.github.io/chardin.js/chardinjs.min.js"></script>

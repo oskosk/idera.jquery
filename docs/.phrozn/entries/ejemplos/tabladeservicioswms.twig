@@ -1,0 +1,38 @@
+layout: ejemplos.twig
+---
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<script type="text/javascript" src="{{this.baseurl}}/idera.jquery.js"></script>
+<script>
+$(function() {
+	//El div tiene id="mapa"
+	$('#capas').idera().tablaDeServiciosWMS();
+
+	//Hago linda la tabla usando los estilos de Bootstrap;
+	$('#capas').addClass('table table-striped table-hover table-condensed');
+});
+</script>
+</head>
+<body>
+<h3>Tabla de servicios WMS de la IDERA</h3>
+
+<h4>Capas publicadas en el marco de la IDERA</h4>
+<div id="capas" style="overflow:auto;width:80%;margin:auto;height:400px"></div>
+
+<p>
+  En este ejemplo se crea una tabla con algunas propiedades de los distintos servicios WMS que se publican conforme a la IDERA.
+</p>
+<p>
+	Tené en cuenta que la estilización de la tabla corre por tu cuenta. En este ejemplo, uso este css<br/>
+	<code>//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css</code>.
+</p>
+<p>
+<a href="javascript:(function(){window.location='view-source:'+window.location})()">Ver el código fuente!</a>
+</p>
+
+</body>
+</html>
