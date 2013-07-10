@@ -340,8 +340,8 @@
 			{
 				var l = {};
 
-				l.Name = $(capa).find('>Name').text();
-				l.Title = $(capa).find('>Title').text();
+				l.Name = _parseLayerName( capa );
+				l.Title = _parseLayerTitle( capa );
 				l.Abstract = $(capa).find('>Abstract').text();
 				l.service = capabilities.service;
 				//Esto para tener un id único. Sirve por ejemplo en
@@ -354,6 +354,16 @@
 				l.MetadataURL = _parseLayerMetadataURL( capa );
 
 				return l;
+
+				function _parseLayerName( capa )
+				{
+					return $(capa).find('>Name').text();
+				}
+
+				function _parseLayerTitle( capa )
+				{
+					return $(capa).find('>Title').text();
+				}
 
 				function _parseLayerLatLonBoundingBox( capa )
 				{
