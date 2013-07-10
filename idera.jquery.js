@@ -161,22 +161,6 @@
 			
 		},
 
-		previewEnMapa: function(capa)
-		{
-			var _this = this;
-			var gmap = _this.$mapa.data('gmap');
-			var bbox = capa.LatLonBoundingBox;
-			var sw = new google.maps.LatLng(bbox.miny, bbox.minx);
-			var ne = new google.maps.LatLng(bbox.maxy, bbox.maxx);
-			var bounds = new google.maps.LatLngBounds( sw, ne );
-			gmap.panToBounds( bounds );
-			//_this.$mapa.centro( bounds.getCenter().lat(), bounds.getCenter().lng() );
-			
-			_this.$mapa.agregarCapaWMS({
-				url:capa.service.href,
-				capas:capa.Name
-			});
-		},
 		/*
 		 * va a buscar un documento XML de Capabilities
 		 * en la url que recibe como parámetro
