@@ -248,6 +248,7 @@
 			capabilities.service.soporta.srs = {};
 			//Algunos de los formatos soportados
 			capabilities.service.soporta.formatos = _parseFormatosDeGetMap(xml);
+			capabilities.Layers = _parseWMSLayers( xml );
 			//Proyección web mercator. Código original
 			capabilities.service.soporta.srs['EPSG:900913'] = false;
 			//Proyección web mercator. Código estándar
@@ -264,27 +265,32 @@
 			});
 
 
-			/* Todas las capas menos la primera,
-			 *  que es la información general del Servicio
-			 */
-			$(xml).find('Layer:gt(0)').each(function(k,v) {
-				var l = _parseLayerXML(v);
-				capabilities.Layers.push(l);
-				_this.$el.trigger('idera.afterWMSLayerParsed', l);
-				
-			});
-
-	
 			function _parseFormatosDeGetMap(xml)
 			{
 				var formatos = [];
 				$(xml).find('Request > GetMap > Format').each(function(k,v) {
 					formatos.push($(this).text());
 				});
-				console.log(formatos);
 				return formatos;
 			}
 
+			/*
+			 * Parsea todas las capas WMS en el XML
+			 * y devuelve una array
+			 */
+			function _parseWMSLayers( xml )
+			{
+				var layers = [];
+				/* Todas las capas menos la primera,
+				 *  que es la información general del Servicio
+				 */
+				$(xml).find('Layer:gt(0)').each(function(k,v) {
+					var l = _parseLayerXML(v);
+					layers.push(l);
+					_this.$el.trigger('idera.afterWMSLayerParsed', l);
+				});
+				return layers;
+			}
 			/*
 			 * Recibe un DOM Layer del XML del capabilities
 			 * y devuelve un objeto javascript con algunas propiedades
