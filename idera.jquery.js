@@ -241,7 +241,7 @@
 			capabilities.service.Abstract = _parseServiceAbstract(xml);
 			capabilities.service.href = _parse_href( xml );
 			capabilities.service.ContactInformation = {};
-			capabilities.service.ContactInformation.ContactElectronicMailAddress = $(xml).find('ContactInformation > ContactElectronicMailAddress').text();
+			capabilities.service.ContactInformation.ContactElectronicMailAddress = _parseServiceContactElectronicMailAddress( xml );
 			//Formatos y SRS soportados por este servicio WMS
 			capabilities.service.soporta = {};
 			//Algunos de los formatos soportados
@@ -275,6 +275,12 @@
 				return abstract;
 			}
 
+			function _parseServiceContactElectronicMailAddress( xml )
+			{
+				var email = '';
+				email = $(xml).find('ContactInformation > ContactElectronicMailAddress').text();
+				return email;
+			}
 
 			function _parseSoporteDeSRS( xml )
 			{
