@@ -244,25 +244,35 @@
 			capabilities.service.ContactInformation.ContactElectronicMailAddress = $(xml).find('ContactInformation > ContactElectronicMailAddress').text();
 			//Formatos y SRS soportados por este servicio WMS
 			capabilities.service.soporta = {};
-			//Algunos de los SRS soportados
-			capabilities.service.soporta.srs = {};
 			//Algunos de los formatos soportados
 			capabilities.service.soporta.formatos = _parseFormatosDeGetMap(xml);
+			//Algunos de los SRS soportados, no todos.
+			capabilities.service.soporta.srs = _parseSoporteDeSRS( xml );
+			//Las capas de este servicio WMS
 			capabilities.Layers = _parseWMSLayers( xml );
-			//Proyección web mercator. Código original
-			capabilities.service.soporta.srs['EPSG:900913'] = false;
-			//Proyección web mercator. Código estándar
-			capabilities.service.soporta.srs['EPSG:3857'] = false;
-			//Coordenadas geográfica.
-			capabilities.service.soporta.srs['EPSG:4326'] = false;
-			//Proyección Gaus Kruger. 
-			capabilities.service.soporta.srs['EPSG:22183'] = false;
-			
-			$.each(capabilities.service.soporta.srs, function(k, v) { 
-				$( xml ).find( "Layer:first SRS:contains('"+ k +"')").each(function() {
-					capabilities.service.soporta.srs[ k ] = true;
-				})
-			});
+
+
+			function _parseSoporteDeSRS( xml )
+			{
+				var srs = {}
+				//Algunos de los SRS soportados, no todos.				
+				//Proyección web mercator. Código original
+				srs['EPSG:900913'] = false;
+				//Proyección web mercator. Código estándar
+				srs['EPSG:3857'] = false;
+				//Coordenadas geográfica.
+				srs['EPSG:4326'] = false;
+				//Proyección Gaus Kruger. 
+				srs['EPSG:22183'] = false;
+
+				$.each( srs, function(k, v) { 
+					$( xml ).find( "Layer:first SRS:contains('"+ k +"')").each(function() {
+						srs[ k ] = true;
+					})
+				});
+
+				return srs;
+			}
 
 
 			function _parseFormatosDeGetMap(xml)
