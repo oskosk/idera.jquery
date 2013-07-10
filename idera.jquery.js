@@ -182,7 +182,7 @@
 			    	//si el pedido fue válido
 			    	if (! $(xml).find('Service').length) {
 			    		if (_this.opts.debug) {
-			    			_this.alert('Error al parsear ' + k, 10000);
+			    			_this.alert('No se encontró el elemento Service al parsear el documento de ' + k, 10000);
 			    		}
 			    		return {};
 
