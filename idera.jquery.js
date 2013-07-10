@@ -233,21 +233,21 @@
 		{
 			var _this = this;
 			var capabilities = {};
-			capabilities.service = {};
-			capabilities.service.urlReal = url ;
+			capabilities.Service = {};
+			capabilities.Service.urlReal = url ;
 			capabilities.Layers = [];
 			//El titúlo del servicio WMS
-			capabilities.service.Title = _parseServiceTitle(xml);
-			capabilities.service.Abstract = _parseServiceAbstract(xml);
-			capabilities.service.href = _parse_href( xml );
-			capabilities.service.ContactInformation = {};
-			capabilities.service.ContactInformation.ContactElectronicMailAddress = _parseServiceContactElectronicMailAddress( xml );
+			capabilities.Service.Title = _parseServiceTitle(xml);
+			capabilities.Service.Abstract = _parseServiceAbstract(xml);
+			capabilities.Service.href = _parse_href( xml );
+			capabilities.Service.ContactInformation = {};
+			capabilities.Service.ContactInformation.ContactElectronicMailAddress = _parseServiceContactElectronicMailAddress( xml );
 			//Formatos y SRS soportados por este servicio WMS
-			capabilities.service.soporta = {};
+			capabilities.Service.soporta = {};
 			//Algunos de los formatos soportados
-			capabilities.service.soporta.formatos = _parseFormatosDeGetMap(xml);
+			capabilities.Service.soporta.formatos = _parseFormatosDeGetMap(xml);
 			//Algunos de los SRS soportados, no todos.
-			capabilities.service.soporta.srs = _parseSoporteDeSRS( xml );
+			capabilities.Service.soporta.srs = _parseSoporteDeSRS( xml );
 			//Las capas de este servicio WMS
 			capabilities.Layers = _parseWMSLayers( xml );
 
@@ -344,11 +344,11 @@
 				l.Name = _parseLayerName( capa );
 				l.Title = _parseLayerTitle( capa );
 				l.Abstract = _parseLayerAbstract( capa );
-					//capabilities.service todavía está en el scope de está función
-				l.service = capabilities.service;
+					//capabilities.Service todavía está en el scope de está función
+				l.Service = capabilities.Service;
 					//Esto para tener un id único. Sirve por ejemplo en
 					//magicSuggest
-				l.id= l.service.Title + l.Name				
+				l.id= l.Service.Title + l.Name				
 				l.LatLonBoundingBox = _parseLayerLatLonBoundingBox( capa );
 				l.BoundingBox = _parseLayerBoundingBox( capa );
 				l.Styles = _parseLayerStyles( capa );
@@ -480,7 +480,7 @@
 				var $row = $('<tr></tr>');
 
 				$row.append(
-					'<td>'+capa.service.Title+'</td>' +
+					'<td>'+capa.Service.Title+'</td>' +
 					'<td>'+capa.Title+'</td>' +
 					'<td>'+capa.Name+'</td>' +					
 					'<td>'+capa.Abstract+'</td>' +
@@ -541,10 +541,10 @@
 			{
 				var $row = $('<tr></tr>');
 				$row.append(
-					'<td>'+capabilities.service.Title+'</td>' +
-					'<td>'+capabilities.service.Abstract+'</td>' +
-					'<td>'+capabilities.service.ContactInformation.ContactElectronicMailAddress+'</td>' +					
-					'<td>'+capabilities.service.href+'</td>' 
+					'<td>'+capabilities.Service.Title+'</td>' +
+					'<td>'+capabilities.Service.Abstract+'</td>' +
+					'<td>'+capabilities.Service.ContactInformation.ContactElectronicMailAddress+'</td>' +					
+					'<td>'+capabilities.Service.href+'</td>' 
 				);
 				$tbody.append( $row );
 			}
@@ -591,7 +591,7 @@
 			$ul.listview();
 
 			_this.$el.on('idera.afterWMSCapabilitiesParsed', function(e, capabilities) {
-				$('<li data-role="list-divider">'+capabilities.service.Title+'</li>')
+				$('<li data-role="list-divider">'+capabilities.Service.Title+'</li>')
 					.append('<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">'+capabilities.Layers.length+'</span>')
 					.appendTo($ul);
 				$(capabilities.Layers).each(function(k,v) {
@@ -664,7 +664,7 @@
 			        '<div style="padding-left: 85px;">' +
 			            '<div style="padding-top: 20px;font-style:bold;font-size:120%;color:#333">' + l.Title +  '</div>' +
 			            '<div style="color: #999">' + l.Name + '</div>' +
-			            '<div style="color: #999">' + l.service.Title + '</div>' +
+			            '<div style="color: #999">' + l.Service.Title + '</div>' +
 			            '</div>' +
 			        '</div><div style="clear:both;"></div>';
 		    	}
@@ -709,13 +709,13 @@
 			_this.$el.on('idera.afterWMSCapabilitiesParsed', function(e, capabilities) {
 
 				// El Title del Capabilities
-				$('<h3></h3>').text(capabilities.service.Title).appendTo(_this.$el);
+				$('<h3></h3>').text(capabilities.Service.Title).appendTo(_this.$el);
 				// Lo parseado del campo ServiceInformaction
-				$('<p></p').html(capabilities.service.Abstract).appendTo(_this.$el);
+				$('<p></p').html(capabilities.Service.Abstract).appendTo(_this.$el);
 				$('<ul></ul>').append(
 
-					$('<li></li>').html(capabilities.service.href),
-					$('<li></li>').html(capabilities.service.ContactInformation.ContactElectronicMailAddress)
+					$('<li></li>').html(capabilities.Service.href),
+					$('<li></li>').html(capabilities.Service.ContactInformation.ContactElectronicMailAddress)
 					
 				).appendTo( _this.$el );
 				var n_capas = capabilities.Layers.length;
@@ -772,9 +772,9 @@
 
 				
 				var srs = 'EPSG:3857';
-				if (!capa.service.soporta.srs['EPSG:3857']) {
+				if (!capa.Service.soporta.srs['EPSG:3857']) {
 					idera.alert('El servidor no soporta el SRS EPSG:3857');
-					if (!capa.service.soporta.srs['EPSG:900913']) {
+					if (!capa.Service.soporta.srs['EPSG:900913']) {
 						idera.alert('El servidor no soporta SRS EPSG:3857 ni EPSG:900913');
 						return;					
 					} else {
@@ -798,7 +798,7 @@
 					.css('height','100%').appendTo(_this.$el);
 				$mapa.argenmap();				
 				$mapa.agregarCapaWMS({
-					url: capa.service.urlReal,
+					url: capa.Service.urlReal,
 					capas: capa.Name,
 					nombre: capa.Title,
 					projection: srs,
