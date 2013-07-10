@@ -342,10 +342,11 @@
 
 				l.Name = _parseLayerName( capa );
 				l.Title = _parseLayerTitle( capa );
-				l.Abstract = $(capa).find('>Abstract').text();
+				l.Abstract = _parseLayerAbstract( capa );
+					//capabilities.service todavía está en el scope de está función
 				l.service = capabilities.service;
-				//Esto para tener un id único. Sirve por ejemplo en
-				//magicSuggest
+					//Esto para tener un id único. Sirve por ejemplo en
+					//magicSuggest
 				l.id= l.service.Title + l.Name				
 				l.LatLonBoundingBox = _parseLayerLatLonBoundingBox( capa );
 				l.BoundingBox = _parseLayerBoundingBox( capa );
@@ -363,6 +364,11 @@
 				function _parseLayerTitle( capa )
 				{
 					return $(capa).find('>Title').text();
+				}
+
+				function _parseLayerAbstract( capa )
+				{
+					return $(capa).find('>Abstract').text();
 				}
 
 				function _parseLayerLatLonBoundingBox( capa )
