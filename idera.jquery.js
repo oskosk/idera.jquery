@@ -251,6 +251,8 @@
 			//Las capas de este servicio WMS
 			capabilities.Layers = _parseWMSLayers( xml );
 
+			_this.$el.trigger('idera.afterWMSCapabilitiesParsed', capabilities);		
+			return capabilities;
 
 			function _parseSoporteDeSRS( xml )
 			{
@@ -310,6 +312,21 @@
 			{
 				var l = {};
 
+				l.Name = $(capa).find('>Name').text();
+				l.Title = $(capa).find('>Title').text();
+				l.Abstract = $(capa).find('>Abstract').text();
+				l.service = capabilities.service;
+				//Esto para tener un id único. Sirve por ejemplo en
+				//magicSuggest
+				l.id= l.service.Title + l.Name				
+				l.LatLonBoundingBox = _parseLayerLatLonBoundingBox( capa );
+				l.BoundingBox = _parseLayerBoundingBox( capa );
+				l.Styles = _parseLayerStyles( capa );
+				l.Keywords = _parseLayerKeywords( capa );
+				l.MetadataURL = _parseLayerMetadataURL( capa );
+
+				return l;
+
 				function _parseLayerLatLonBoundingBox( capa )
 				{
 					var LatLonBoundingBox = {};
@@ -363,23 +380,8 @@
 					return url;
 				};		
 
-				l.Name = $(capa).find('>Name').text();
-				l.Title = $(capa).find('>Title').text();
-				l.Abstract = $(capa).find('>Abstract').text();
-				l.service = capabilities.service;
-				//Esto para tener un id único. Sirve por ejemplo en
-				//magicSuggest
-				l.id= l.service.Title + l.Name				
-				l.LatLonBoundingBox = _parseLayerLatLonBoundingBox( capa );
-				l.BoundingBox = _parseLayerBoundingBox( capa );
-				l.Styles = _parseLayerStyles( capa );
-				l.Keywords = _parseLayerKeywords( capa );
-				l.MetadataURL = _parseLayerMetadataURL( capa );
-
-				return l;
 			}
-			_this.$el.trigger('idera.afterWMSCapabilitiesParsed', capabilities);		
-			return capabilities;
+
 		}
 	};
 
