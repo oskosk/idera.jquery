@@ -237,7 +237,7 @@
 			capabilities.service.urlReal = url ;
 			capabilities.Layers = [];
 			//El titúlo del servicio WMS
-			capabilities.service.Title = $(xml).find('Title:first').text();
+			capabilities.service.Title = _parseServiceTitle(xml);
 			capabilities.service.Abstract = $(xml).find('Abstract:first').text();
 			capabilities.service.href = $(xml).find('OnlineResource').attr('xlink:href');
 			capabilities.service.ContactInformation = {};
@@ -253,6 +253,13 @@
 
 			_this.$el.trigger('idera.afterWMSCapabilitiesParsed', capabilities);		
 			return capabilities;
+
+			function _parseServiceTitle( xml )
+			{
+				var title = '';
+				title = $(xml).find('Title:first').text();
+				return title;
+			}
 
 			function _parseSoporteDeSRS( xml )
 			{
