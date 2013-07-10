@@ -238,7 +238,7 @@
 			capabilities.Layers = [];
 			//El titúlo del servicio WMS
 			capabilities.service.Title = _parseServiceTitle(xml);
-			capabilities.service.Abstract = $(xml).find('Abstract:first').text();
+			capabilities.service.Abstract = _parseServiceAbstract(xml);
 			capabilities.service.href = $(xml).find('OnlineResource').attr('xlink:href');
 			capabilities.service.ContactInformation = {};
 			capabilities.service.ContactInformation.ContactElectronicMailAddress = $(xml).find('ContactInformation > ContactElectronicMailAddress').text();
@@ -260,6 +260,14 @@
 				title = $(xml).find('Title:first').text();
 				return title;
 			}
+
+			function _parseServiceAbstract( xml )
+			{
+				var abstract = '';
+				abstract = $(xml).find('Abstract:first').text();
+				return abstract;
+			}
+
 
 			function _parseSoporteDeSRS( xml )
 			{
