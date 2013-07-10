@@ -248,6 +248,8 @@
 			capabilities.Service.soporta.formatos = _parseFormatosDeGetMap(xml);
 			//Algunos de los SRS soportados, no todos.
 			capabilities.Service.soporta.srs = _parseSoporteDeSRS( xml );
+			//Algunos de los Requests WMS soportados, no todos.
+			capabilities.Service.soporta.requests = _parseSoporteDeRequests( xml );			
 			//Las capas de este servicio WMS
 			capabilities.Layers = _parseWMSLayers( xml );
 
@@ -304,6 +306,28 @@
 
 				return srs;
 			}
+			/*
+			 * Devuelve algunos de los requests soportados
+			 * por el servicio WMS. Sirve para inducir
+			 * si el mismo servidor soporta WFS chequeando
+			 * si soporta DescribeLayer
+			 */
+			function _parseSoporteDeRequests( xml )
+			{
+				var requests = {}
+				requests['GetCapabilities'] = false;
+				requests['GetMap'] = false;
+				requests['GetFeatureInfo'] = false;
+				requests['DescribeLayer'] = false;
+				requests['GetLegendGraphic'] = false;
+				requests['GetStyles'] = false;				
+				$.each( requests, function(k, v) { 
+					$( xml ).find( "Request > "+ k ).each(function() {
+						requests[ k ] = true;
+					})
+				});
+				return requests;
+			}			
 
 
 			function _parseFormatosDeGetMap(xml)
