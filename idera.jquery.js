@@ -254,6 +254,7 @@
 			_this.$el.trigger('idera.afterWMSCapabilitiesParsed', capabilities);		
 			return capabilities;
 
+
 			function _parseServiceTitle( xml )
 			{
 				var title = '';
