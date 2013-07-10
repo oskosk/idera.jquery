@@ -209,9 +209,12 @@
 							_this.todasLasCapas.push( capa );
 						}
 		        
-		        
+		        // parseWMSCapabilities dispara dos eventos importantes
+		        //. Me cuelgo de esos eventos para almacenar la data
+		        // parseada
 		        _this.$el.on('idera.afterWMSCapabilitiesParsed', rememberWMSCapabilities);
 		        _this.$el.on('idera.afterWMSLayerParsed', rememberWMSLayer);
+
 		        _this.parseWMSCapabilities( xml, url );
 		        _this.alert('Cargando '+k+'...',1000);
 
@@ -243,6 +246,8 @@
 			capabilities.service.soporta = {};
 			//Algunos de los SRS soportados
 			capabilities.service.soporta.srs = {};
+			//Algunos de los formatos soportados
+			capabilities.service.soporta.formatos = _parseFormatosDeGetMap(xml);
 			//Proyección web mercator. Código original
 			capabilities.service.soporta.srs['EPSG:900913'] = false;
 			//Proyección web mercator. Código estándar
@@ -251,7 +256,7 @@
 			capabilities.service.soporta.srs['EPSG:4326'] = false;
 			//Proyección Gaus Kruger. 
 			capabilities.service.soporta.srs['EPSG:22183'] = false;
-
+			
 			$.each(capabilities.service.soporta.srs, function(k, v) { 
 				$( xml ).find( "Layer:first SRS:contains('"+ k +"')").each(function() {
 					capabilities.service.soporta.srs[ k ] = true;
@@ -268,7 +273,18 @@
 				_this.$el.trigger('idera.afterWMSLayerParsed', l);
 				
 			});
-			
+
+	
+			function _parseFormatosDeGetMap(xml)
+			{
+				var formatos = [];
+				$(xml).find('Request > GetMap > Format').each(function(k,v) {
+					formatos.push($(this).text());
+				});
+				console.log(formatos);
+				return formatos;
+			}
+
 			/*
 			 * Recibe un DOM Layer del XML del capabilities
 			 * y devuelve un objeto javascript con algunas propiedades
@@ -343,7 +359,6 @@
 				l.Styles = _parseLayerStyles( capa );
 				l.Keywords = _parseLayerKeywords( capa );
 				l.MetadataURL = _parseLayerMetadataURL( capa );
-
 
 				return l;
 			}
