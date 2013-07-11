@@ -32,7 +32,7 @@
 		 */
 		if (typeof options === "string") {
 			options = {
-				id_servicio_wms: options
+				id_nodo: options
 			}
 		}
 
@@ -144,13 +144,13 @@
 			function recopilarCapabilities()
 			{
 				/*
-				 * Si se pasó la propiedad id_servicio_wms
+				 * Si se pasó la propiedad id_nodo
 				 * a las opciones de .idera()
 				 * con el id de uno de los servicios wms de la idera
 				 * sólo cargo ese capabilities
 				 */ 
-				if ( _this.opts.id_servicio_wms !== undefined ) {
-					var id = _this.opts.id_servicio_wms;
+				if ( _this.opts.id_nodo !== undefined ) {
+					var id = _this.opts.id_nodo;
 					if ( _this.servidores[ id ] === undefined) {
 						_this.alert( 'No existe ese identificador en IDERA');
 						return;
