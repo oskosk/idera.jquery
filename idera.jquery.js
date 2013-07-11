@@ -1,4 +1,4 @@
-(function($) {
+;(function($) {
 	var SERVIDORES = {};
 
 	/* plugin de jquery que permite visualizar de varias maneras
