@@ -1,9 +1,19 @@
 (function($) {
-	var SERVIDORES = false;
+	var SERVIDORES = {}};
 
-	// jquery que permite visualizar de varias maneras
-	// los servicios de la IDERA
-	// http://www.idera.gob.ar
+	/* plugin de jquery que permite visualizar de varias maneras
+	 * los servicios de la IDERA
+	 *
+	 * idera.jquery EN GITHUB
+	 * ----------------------
+	 * http://github.com/oskosk/idera.jquery
+	 * IDERA
+	 * ------
+	 * http://www.idera.gob.ar
+	 *
+	 * -Este plugin sigue la propuesta de
+	 *   http://jqueryboilerplate.com/
+	 */
 	function Idera(el, options) {
 
 		//Defaults:
@@ -111,13 +121,12 @@
 				/*
 				 Si no se pasó la propiedad 'servidores'
 				 como parámetro a $.fn.idera();
-				 recopilo las capabilities de TODO IDERA.
-				 */
-			if (! _this.opts.servidores) {
-				/*
 				 uso una array de servidores en formato JSON
 				 publicada en una URL de idera.				
 				 */
+				 */
+			if (! _this.opts.servidores) {
+
 				$.getJSON('http://mapa.ign.gob.ar/idera.jquery/servicios_wms.json', function(data) {
 					_this.servidores = data;
 					recopilarCapabilities();
