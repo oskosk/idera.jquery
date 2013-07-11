@@ -1,4 +1,4 @@
-;(function($) {
+;(function($, window, document, undefined) {
 	var SERVIDORES = {};
 
 	/* plugin de jquery que permite visualizar de varias maneras
@@ -872,4 +872,4 @@
 
 	};
 
-})(jQuery);
+})(jQuery, window, document);
