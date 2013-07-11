@@ -56,64 +56,7 @@
 			_this.ninja();
 
 		},
-		/**
-		 * Muestra un div amarillo
-		 * con una notificación
-		 * que dura 3 segundos por default
-		 * @msg: el mensaje a mostrar
-		 * @timeout: el tiempo en milisegundos que dure el mensaje
-		 */
-		alert: function( msg, timeout )
-		{
-			var _this = this;
-			var $boy;
-			var n_notifications = _this.$el.find('.idera_notification').length;
-			$boy = $('<div class="idera_notification"></div>').css({
-				'min-width':'300px'
-			}).text(msg).prependTo(_this.$el)
-			.css({
-				/*
-				 * Estilos para cartel amarillito
-				 */
-				position:'absolute',
-				'z-index': 10000 + n_notifications,
-				display:'none',
-				padding: '5px 10px',
-				background:'#fffed0',
-				border: '1px solid #d4d287',
-				margin:'5px',
-				'font-family':'Arial'
-			}).fadeIn();
 
-			$('<span>[ X ]</span>').css({
-				'float':'right',
-				'cursor':'pointer'
-			}).click(function(){
-				cerrar_alert();
-			}).appendTo($boy);
-
-
-			if (timeout === undefined) {
-				timeout = 3000;
-			}
-			setTimeout(cerrar_alert, timeout);
-			
-			/*
-			 * Muestro en consola los mensaje
-			 * si debug==true
-			 */
-			if (_this.debug && window.console !== undefined) {
-				console.log('idera.jquery ' + msg);
-
-			} 
-		
-			function cerrar_alert()
-			{
-				$boy.slideUp('fast');
-				$boy.remove();
-			}			
-			
-		},
 		/**
 		 * Carga todos los capabilities de cada nodo de idera.
 		 * Genera un objeto en $().data('servidores') con las capabilities
@@ -462,6 +405,64 @@
 
 			}
 
+		},
+		/**
+		 * Muestra un div amarillo
+		 * con una notificación
+		 * que dura 3 segundos por default
+		 * @msg: el mensaje a mostrar
+		 * @timeout: el tiempo en milisegundos que dure el mensaje
+		 */
+		alert: function( msg, timeout )
+		{
+			var _this = this;
+			var $boy;
+			var n_notifications = _this.$el.find('.idera_notification').length;
+			$boy = $('<div class="idera_notification"></div>').css({
+				'min-width':'300px'
+			}).text(msg).prependTo(_this.$el)
+			.css({
+				/*
+				 * Estilos para cartel amarillito
+				 */
+				position:'absolute',
+				'z-index': 10000 + n_notifications,
+				display:'none',
+				padding: '5px 10px',
+				background:'#fffed0',
+				border: '1px solid #d4d287',
+				margin:'5px',
+				'font-family':'Arial'
+			}).fadeIn();
+
+			$('<span>[ X ]</span>').css({
+				'float':'right',
+				'cursor':'pointer'
+			}).click(function(){
+				cerrar_alert();
+			}).appendTo($boy);
+
+
+			if (timeout === undefined) {
+				timeout = 3000;
+			}
+			setTimeout(cerrar_alert, timeout);
+			
+			/*
+			 * Muestro en consola los mensaje
+			 * si debug==true
+			 */
+			if (_this.debug && window.console !== undefined) {
+				console.log('idera.jquery ' + msg);
+
+			} 
+		
+			function cerrar_alert()
+			{
+				$boy.slideUp('fast');
+				$boy.remove();
+			}			
+			
 		}
 	};
 
