@@ -1,5 +1,5 @@
 (function($) {
-	var SERVIDORES = {}};
+	var SERVIDORES = {};
 
 	/* plugin de jquery que permite visualizar de varias maneras
 	 * los servicios de la IDERA
@@ -36,12 +36,9 @@
 		//Privates:
 		this.$el = $(el);
 		this.$mapa = [];
-
-		this.servidores = this.opts.servidores;
-		//Todas las capas de idera en una array
+			//Todas las capas de idera en una array
 		this.todasLasCapas = [];
-
-
+		
 	}
 
 	// Separate functionality from object creation
@@ -123,7 +120,6 @@
 				 como parámetro a $.fn.idera();
 				 uso una array de servidores en formato JSON
 				 publicada en una URL de idera.				
-				 */
 				 */
 			if (! _this.opts.servidores) {
 
