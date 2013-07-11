@@ -25,12 +25,19 @@
 			proxy: 'http://mapa.ign.gob.ar/idera.jquery/proxy/?url='
 		};
 
-		//Extending options:
+		/*
+		 * Funcionamiento particular de este plugin
+		 * Si se pasa una string en lugar de un objeto
+		 * lo interpreto como el id de un wms específico
+		 */
 		if (typeof options === "string") {
 			options = {
 				id_servicio_wms: options
 			}
 		}
+
+		//Extending options:
+
 		this.opts = $.extend({}, this.defaults, options);
 
 		//Privates:
@@ -122,7 +129,6 @@
 				 publicada en una URL de idera.				
 				 */
 			if (! _this.opts.servidores) {
-
 				$.getJSON('http://mapa.ign.gob.ar/idera.jquery/servicios_wms.json', function(data) {
 					_this.servidores = data;
 					recopilarCapabilities();
