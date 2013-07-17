@@ -74,5 +74,10 @@
     "rosario": {
         "title": "Municipalidad de Rosario",
         "url": "http://www.rosario.gov.ar/wms/planobase?"
+    },
+    "anida": {
+    	"title": "Atlas Nacional Interactivo de Argentina",
+	"url": "http://anida.ign.gob.ar/geoserver/wms?"
     }
+
 }

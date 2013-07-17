@@ -1,240 +1,256 @@
-(function($) {
-	var SERVIDORES = false;
+;(function($, window, document, undefined) {
+	var SERVIDORES_WMS = {},
+		CARGANDO_SERVIDORES_WMS = false, //flag para la carga del listado JSON de servidores
+		_IDERA = {}; //objeto global para eventos globales del plugin
 
-	// jquery que permite visualizar de varias maneras
-	// los servicios de la IDERA
-	// http://www.idera.gob.ar
+	/* plugin de jquery que permite visualizar de varias maneras
+	 * los servicios de la IDERA
+	 *
+	 * idera.jquery EN GITHUB
+	 * ----------------------
+	 * http://github.com/oskosk/idera.jquery
+	 *
+	 * IDERA
+	 * ------
+	 * http://www.idera.gob.ar
+	 *
+	 * -Este plugin sigue la propuesta de
+	 *   http://jqueryboilerplate.com/
+	 */
 	function Idera(el, options) {
 
 		//Defaults:
 		this.defaults = {
-			servidores: undefined,
 			debug: false,
 			// un script o proxy que 
 			// reciba parámetro url=xxxx
 			proxy: 'http://mapa.ign.gob.ar/idera.jquery/proxy/?url='
 		};
 
-		//Extending options:
+		/*
+		 * Funcionamiento particular de este plugin
+		 * Si se pasa una string en lugar de un objeto
+		 * lo interpreto como el id de un wms específico
+		 */
 		if (typeof options === "string") {
 			options = {
-				id_servicio_wms: options
+				id_nodo: options
 			}
 		}
+
+		//Extending options:
+
 		this.opts = $.extend({}, this.defaults, options);
 
 		//Privates:
 		this.$el = $(el);
 		this.$mapa = [];
-
-		this.servidores = this.opts.servidores;
-		//Todas las capas de idera en una array
+			//Todas las capas de idera en una array
 		this.todasLasCapas = [];
-
-
+		this.servidores = false;
+		
 	}
 
 	// Separate functionality from object creation
 	Idera.prototype = {
-
-		init: function() {
-			var _this = this;
-			_this.ninja();
-
-		},
-		/**
-		 * Muestra un div amarillo
-		 * con una notificación
-		 * que dura 3 segundos por default
-		 * @msg: el mensaje a mostrar
-		 * @timeout: el tiempo en milisegundos que dure el mensaje
-		 */
-		alert: function( msg, timeout )
-		{
-			var _this = this;
-			var $boy;
-			var n_notifications = _this.$el.find('.idera_notification').length;
-			$boy = $('<div class="idera_notification"></div>').css({
-				'min-width':'300px'
-			}).text(msg).prependTo(_this.$el)
-			.css({
-				/*
-				 * Estilos para cartel amarillito
-				 */
-				position:'absolute',
-				'z-index': 10000 + n_notifications,
-				display:'none',
-				padding: '5px 10px',
-				background:'#fffed0',
-				border: '1px solid #d4d287',
-				margin:'5px',
-				'font-family':'Arial'
-			}).fadeIn();
-
-			$('<span>[ X ]</span>').css({
-				'float':'right',
-				'cursor':'pointer'
-			}).click(function(){
-				cerrar_alert();
-			}).appendTo($boy);
-
-
-			if (timeout === undefined) {
-				timeout = 3000;
-			}
-			setTimeout(cerrar_alert, timeout);
-			
-			/*
-			 * Muestro en consola los mensaje
-			 * si debug==true
-			 */
-			if (_this.debug && window.console !== undefined) {
-				console.log('idera.jquery ' + msg);
-
-			} 
-		
-			function cerrar_alert()
-			{
-				$boy.slideUp('fast');
-				$boy.remove();
-			}			
-			
-		},
 		/**
 		 * Carga todos los capabilities de cada nodo de idera.
 		 * Genera un objeto en $().data('servidores') con las capabilities
 		 * parseadas
 		 */
-		ninja: function() {
+		init: function() {
 			var _this = this;
 
-				/*
-				 Si no se pasó la propiedad 'servidores'
-				 como parámetro a $.fn.idera();
-				 recopilo las capabilities de TODO IDERA.
-				 */
-			if (! _this.opts.servidores) {
 				/*
 				 uso una array de servidores en formato JSON
 				 publicada en una URL de idera.				
 				 */
-				$.getJSON('http://mapa.ign.gob.ar/idera.jquery/servicios_wms.json', function(data) {
-					_this.servidores = data;
-					recopilarCapabilities();
-				})
-			} else {
-				/*
-				 Acá atajo el caso de que se pase 'servidores'
-				 como propiedad a las opciones de idera({ servidores: Object});
-				 */
-				recopilarCapabilities();
-			}
+			_this.onServerListReady(function() {
+				$.proxy(recopilarCapabilities, _this)();
+			});
+		
 			
 			function recopilarCapabilities()
 			{
+				var ids = [];
+					_this.servidores = SERVIDORES_WMS;
 				/*
-				 * Si se pasó la propiedad id_servicio_wms
+				 * Si se pasó la propiedad id_nodo
 				 * a las opciones de .idera()
 				 * con el id de uno de los servicios wms de la idera
 				 * sólo cargo ese capabilities
 				 */ 
-				if ( _this.opts.id_servicio_wms !== undefined ) {
-					var id = _this.opts.id_servicio_wms;
-					if ( _this.servidores[ id ] === undefined) {
-						_this.alert( 'No existe ese identificador en IDERA');
-						return;
-					} else {
-						var servidor = _this.servidores[ id ];
+				if ( _this.opts.id_nodo && SERVIDORES_WMS[ _this.opts.id_nodo ] === undefined) {
+					_this.alert( 'No existe ese identificador en IDERA');
+					return;
+				}
 
-						_this.servidores = {};
-						_this.servidores[ id ] = servidor;
+				if ( _this.opts.id_nodo ) {
+					ids.push(_this.opts.id_nodo)
+				} else {
+					$.each(SERVIDORES_WMS, function(id_nodo) {
+						ids.push(id_nodo);
+					});
+				}
+
+				$(_IDERA).on('idera.afterWMSCapabilitiesParsed', function(e, capabilities) {
+       			_this._rememberWMSCapabilities(capabilities);
+		        _this.alert('Cargando '+ capabilities.id_nodo +'...',1000);
+				});
+				/*
+				$( ids ).each(function(i, id_nodo) {
+					_this.onReady(id_nodo, function() {}, _this);
+				
+				});
+				*/
+			}
+		
+		},
+		onServerListReady:function(callback, context)
+		{
+			var _this = this;
+			// Si ya se cargó la lista de servidores
+			if ( ! $.isEmptyObject(SERVIDORES_WMS) ) {
+				$.proxy(callback, context)();
+			} else {
+				//si la lista de servidores no está cargada				
+				//espero el evento afterLoadServicesList
+				$(_IDERA).on('idera.afterLoadServicesList', function() {
+					$.proxy(callback, context)();
+
+				});
+				//Si no se está cargando actualmente la lista
+				// la carrgo y disparo el evento apenas termine de cargar
+				if (! CARGANDO_SERVIDORES_WMS ) {
+					CARGANDO_SERVIDORES_WMS = true;
+					$.getJSON('http://mapa.ign.gob.ar/idera.jquery/servicios_wms.json', function(data) {
+						$.each(data, function(id, nodo) {
+							SERVIDORES_WMS[ id ] = nodo;
+						})
+						CARGANDO_SERVIDORES_WMS = false;					
+						$(_IDERA).trigger('idera.afterLoadServicesList', SERVIDORES_WMS);
+					});	
+				}						
+			}
+		},
+		onReady:function(id_nodo, callback, context)
+		{
+			var _this = this;
+
+			_this.onServerListReady(function() {
+				magia();	
+			}, _this);
+
+			function magia() {
+				if ( SERVIDORES_WMS[ id_nodo ].capabilities !== undefined ) {
+					$.proxy(callback, context)();
+					return;
+				} else {
+					_this.alert('Esperando '+ id_nodo +'...');
+					_this.$el.on('idera.afterWMSCapabilitiesAdded', function(e, capabilities) {
+
+						if ( id_nodo === capabilities.id_nodo ) {
+							$.proxy(callback, context)();
+							return;
+						}
+					});
+
+					// Si en este momento no se está cargando el getcapabilities, lo cargo
+					if ( SERVIDORES_WMS[ id_nodo ]._cargando === undefined) {
+						SERVIDORES_WMS[ id_nodo ]._cargando = true;
+						_this.fetchWMSCapabilities(	id_nodo );	
+					} else {
 
 					}
 				}
-
-				$.each(_this.servidores, function(k, v) {
-					_this.fetchWMSCapabilities(_this.servidores[k].url, k);
-				});
-
-
-			}
-			
+			}			
 		},
 
-		/*
+	/*
 		 * va a buscar un documento XML de Capabilities
 		 * en la url que recibe como parámetro
 		 * Parsea eld ocumento y lo agrega como propiedad
-		 * a _this.servidores[k]
+		 * a SERVIDORES_WMS[id_nodo]
 		 */
-		fetchWMSCapabilities:function(url, k) {
-			var _this = this;
-			_this.alert('Esperando '+k+'...');
+		fetchWMSCapabilities:function(id_nodo, callback, context) {
+			var _this = this,
+				url = SERVIDORES_WMS[id_nodo].url;
+			_this.alert('Esperando '+ id_nodo +'...');
 			$.ajax({
 		        type: "GET",
 			    url: _this.opts.proxy + encodeURIComponent(url)
 			    	+ 'service%3Dwms%26request%3DgetCapabilities%26version%3D1.1.1',
 			    dataType: "xml",
 			    error: function() {
-			    	_this.alert('Error el cargar ' + k, 20000);
+			    	_this.alert('Error el cargar ' + id_nodo, 20000);
 			    },
 			    success: function(xml) {
+			    	if (_this.opts.debug) {
+		        		SERVIDORES_WMS[id_nodo].capabilities_xml = xml;
+		        }			    	
+
 			    	//si el pedido fue válido
 			    	if (! $(xml).find('Service').length) {
 			    		if (_this.opts.debug) {
 			    			_this.alert('No se encontró el elemento Service al parsear el documento de ' + k, 10000);
 			    		}
-			    		return {};
-
+			    		return false;
 			    	}
-			    	if (_this.opts.debug) {
-		        		_this.servidores[k].capabilities_xml = xml;
-		        	}
-
-		        /*
-		         * Agrega el capabilities parseado
-		         * a _this.servidores;
-		         */
-						function rememberWMSCapabilities(e, capabilities)
-						{
-							_this.servidores[k].capabilities = capabilities;
-						}
-		        /*
-		         * Agrega el la capa WMS parseada
-		         * a _this.todasLasCapas;
-		         */
-						function rememberWMSLayer(e, capa)
-						{
-							// array con todas las capas de idera
-							_this.todasLasCapas.push( capa );
-						}
-		        
-		        // parseWMSCapabilities dispara dos eventos importantes
-		        //. Me cuelgo de esos eventos para almacenar la data
-		        // parseada
-		        _this.$el.on('idera.afterWMSCapabilitiesParsed', rememberWMSCapabilities);
-		        _this.$el.on('idera.afterWMSLayerParsed', rememberWMSLayer);
-
-		        _this.parseWMSCapabilities( xml, url );
-		        _this.alert('Cargando '+k+'...',1000);
-
+		        var capabilities = _this.parseWMSCapabilities( xml, id_nodo );	
+       			$(_IDERA).trigger('idera.afterWMSCapabilitiesParsed', capabilities);			        
+		        if (callback) {
+		        	$.proxy(callback, context)(xml, id_nodo);	
+		        }
 		      }
 
 		 	});
 			
 		},
+    /*
+     * Agrega el capabilities parseado
+     * a SERVIDORES_WMS;
+     */
+		_rememberWMSCapabilities: function(capabilities)
+		{
+			var _this = this;
+
+			var id_nodo = capabilities.id_nodo;
+			/*
+			 * Si ya está cargado
+			 * Parece redundante pero como SERVIDORES_WMS es una array local
+			 * lo puede cargar cualquiera de las instancias del plugin
+			 */
+			if (SERVIDORES_WMS[id_nodo].capabilities === undefined) {
+				SERVIDORES_WMS[id_nodo].capabilities = capabilities;				
+			}
+
+	    /*
+	     * Agrega las capas WMS parseadas
+	     * a _this.todasLasCapas;
+	     * dispara evento por cada capa agregada
+	     */
+
+			$(SERVIDORES_WMS[id_nodo].capabilities.Layers).each(function(k, capa) {
+				_this.todasLasCapas.push( capa );	
+				_this.$el.trigger('idera.afterWMSLayerAdded', capa);						
+			})
+
+			_this.$el.trigger('idera.afterWMSCapabilitiesAdded', capabilities);		
+		},
+
 		/*
 		 * Usa selectores de jQuery para parsear 
 		 * el documento capabilities
 		 * devuelve un objeto con las propiedades del capabilities
 		 *.
 		 */
-		parseWMSCapabilities: function(xml, url)
+		parseWMSCapabilities: function(xml, id_nodo)
 		{
 			var _this = this;
 			var capabilities = {};
+			capabilities.id_nodo = id_nodo;
 			capabilities.Service = {};
-			capabilities.Service.urlReal = url ;
+			capabilities.Service.urlReal = SERVIDORES_WMS[id_nodo].url ;
 			capabilities.Layers = [];
 			//El titúlo del servicio WMS
 			capabilities.Service.Title = _parseServiceTitle(xml);
@@ -253,7 +269,6 @@
 			//Las capas de este servicio WMS
 			capabilities.Layers = _parseWMSLayers( xml );
 
-			_this.$el.trigger('idera.afterWMSCapabilitiesParsed', capabilities);		
 			return capabilities;
 
 
@@ -352,7 +367,6 @@
 				$(xml).find('Layer:gt(0)').each(function(k,v) {
 					var l = _parseLayerXML(v);
 					layers.push(l);
-					_this.$el.trigger('idera.afterWMSLayerParsed', l);
 				});
 				return layers;
 			}
@@ -422,8 +436,10 @@
 				{
 					var styles = [];
 					$(capa).find('>Style').each(function(k, v) {
-						var s = ''
-						s = $(this).find('>Name').text();
+						var s = {
+							Name: $(this).find('>Name').text(),
+							LegendURL: $(this).find(' LegendURL > OnlineResource').attr('xlink:href')
+						};
 						styles.push( s );
 					});
 					return styles;
@@ -451,6 +467,64 @@
 
 			}
 
+		},
+		/**
+		 * Muestra un div amarillo
+		 * con una notificación
+		 * que dura 3 segundos por default
+		 * @msg: el mensaje a mostrar
+		 * @timeout: el tiempo en milisegundos que dure el mensaje
+		 */
+		alert: function( msg, timeout )
+		{
+			var _this = this;
+			var $boy;
+			var n_notifications = _this.$el.find('.idera_notification').length;
+			$boy = $('<div class="idera_notification"></div>').css({
+				'min-width':'300px'
+			}).text(msg).prependTo(_this.$el)
+			.css({
+				/*
+				 * Estilos para cartel amarillito
+				 */
+				position:'absolute',
+				'z-index': 10000 + n_notifications,
+				display:'none',
+				padding: '5px 10px',
+				background:'#fffed0',
+				border: '1px solid #d4d287',
+				margin:'5px',
+				'font-family':'Arial'
+			}).fadeIn();
+
+			$('<span>[ X ]</span>').css({
+				'float':'right',
+				'cursor':'pointer'
+			}).click(function(){
+				cerrar_alert();
+			}).appendTo($boy);
+
+
+			if (timeout === undefined) {
+				timeout = 3000;
+			}
+			setTimeout(cerrar_alert, timeout);
+			
+			/*
+			 * Muestro en consola los mensaje
+			 * si debug==true
+			 */
+			if (_this.debug && window.console !== undefined) {
+				console.log('idera.jquery ' + msg);
+
+			} 
+		
+			function cerrar_alert()
+			{
+				$boy.fadeOut('fast');
+				$boy.remove();
+			}			
+			
 		}
 	};
 
@@ -462,11 +536,12 @@
 	 */
 	$.fn.idera = function(options) {
 		return this.each(function() {
-			var rev = new Idera(this, options);
-
-			$(this).data('idera', rev);
+			var rev = $(this).data('idera');
+			if ( ! rev ) {
+				rev = new Idera(this, options);
+				$(this).data('idera', rev);
+			}
 			rev.init();
-
 		});
 	};
 
@@ -516,7 +591,7 @@
 			}
 
 			_this.$el.append($table);
-			_this.$el.on('idera.afterWMSLayerParsed', function(e, capa) {
+			$(_this.servidores[idera.opts.id_nodo].capabilities.Layers).each(function(k,capa) {
 				addRow(capa);
 			});
 		}
@@ -526,9 +601,11 @@
 	$.fn.tablaDeCapasWMS  = function(options) {
 		return this.each(function() {
 			var rev = $(this).data().idera;
-			if ( rev !== undefined) {			
-				var rev = $(this).data().idera;
-				renderTablaDeCapasWMS(rev);
+			if ( rev !== undefined) {
+				rev.onReady(rev.opts.id_nodo, function() {
+					renderTablaDeCapasWMS(rev);	
+				}, rev)
+				
 			}
 		});
 
@@ -574,9 +651,16 @@
 			}
 
 			_this.$el.append($table);
-			_this.$el.on('idera.afterWMSCapabilitiesParsed', function(e, capabilities) {
-				addRow(capabilities);
-			});
+			_this.onServerListReady(function() {
+				$.each(_this.servidores, function(id_nodo, nodo) {
+					_this.onReady(id_nodo, function() {
+						addRow(_this.servidores[id_nodo].capabilities);
+					}, _this);
+				});
+			}, _this);
+			//_this.$el.on('idera.afterWMSCapabilitiesAdded', function(e, capabilities) {
+			//	addRow(capabilities);
+			//});
 		}
 	
 
@@ -585,7 +669,6 @@
 		return this.each(function() {
 			var rev = $(this).data().idera;
 			if ( rev !== undefined) {			
-				var rev = $(this).data().idera;
 				renderTablaDeServiciosWMS(rev);
 			}
 		});
@@ -614,7 +697,7 @@
 			}).appendTo( _this.$el );
 			$ul.listview();
 
-			_this.$el.on('idera.afterWMSCapabilitiesParsed', function(e, capabilities) {
+			_this.$el.on('idera.afterWMSCapabilitiesAdded', function(e, capabilities) {
 				$('<li data-role="list-divider">'+capabilities.Service.Title+'</li>')
 					.append('<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">'+capabilities.Layers.length+'</span>')
 					.appendTo($ul);
@@ -730,7 +813,7 @@
 		 */
 		function renderProsa(idera) {
 			var _this = idera;
-			_this.$el.on('idera.afterWMSCapabilitiesParsed', function(e, capabilities) {
+			_this.$el.on('idera.afterWMSCapabilitiesAdded', function(e, capabilities) {
 
 				// El Title del Capabilities
 				$('<h3></h3>').text(capabilities.Service.Title).appendTo(_this.$el);
@@ -779,73 +862,72 @@
 		/*
 		 * Genera un mapetti
 		 */
-		function renderMapa(idera, options) {
-			var _this = idera;
-			var layerName = options;
-			_this.$el.on('idera.afterWMSCapabilitiesParsed', function(e, capabilities) {
-				var capa = null;
-				$(capabilities.Layers).each(function(k,v) {
-					if (v.Name == layerName) {
-						capa = v;
-					}
-				});
-				if (!capa) {
-					idera.alert('No existe la capa '+ layerName,10000);
-					return;
+		function renderMapa(idera, id_nodo, options) {
+			var _this = idera,
+				layerName = options,
+				capa = null,
+				capabilities = idera.servidores[id_nodo].capabilities;
+			$(capabilities.Layers).each(function(k,v) {
+				if (v.Name == layerName) {
+					capa = v;
 				}
+			});
+			if (!capa) {
+				idera.alert('No existe la capa '+ layerName,10000);
+				return;
+			}
 
-				
-				var srs = 'EPSG:3857';
-				if (!capa.Service.soporta.srs['EPSG:3857']) {
-					idera.alert('El servidor no soporta el SRS EPSG:3857');
-					if (!capa.Service.soporta.srs['EPSG:900913']) {
-						idera.alert('El servidor no soporta SRS EPSG:3857 ni EPSG:900913');
-						return;					
-					} else {
-						idera.alert('Probando SRS EPSG:900913',6000);
-						/*
-						algunos servidores
-						 mapserver que tienen la config en un archivo
-						 de nombre epsg escrito en minúscula,
-						 tiran error con EPSG:900913 en mayúsucla
-						*/
-						srs = 'EPSG:900913';
-					}	
-				}
-				var tieneBBox = true;
-				if (! capa.LatLonBoundingBox.minx) {
-					idera.alert('El servidor no informa BoundingBox');
-					tieneBBox = false;
-				}
 
-				var $mapa = $('<div class="idera_mapa"></div>')
-					.css('height','100%').appendTo(_this.$el);
-				$mapa.argenmap();				
-				$mapa.agregarCapaWMS({
-					url: capa.Service.urlReal,
-					capas: capa.Name,
-					nombre: capa.Title,
-					projection: srs,
-					srs:srs
-				});
-				if (tieneBBox) {
-					var bounds = new OpenLayers.Bounds();
-					bounds.extend(
-						new OpenLayers.LonLat(capa.LatLonBoundingBox.minx,capa.LatLonBoundingBox.miny)
-							.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection('EPSG:3857'))
-					);
-			    bounds.extend(
-			    	new OpenLayers.LonLat(capa.LatLonBoundingBox.maxx,capa.LatLonBoundingBox.maxy)
-			    		.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection('EPSG:3857'))
-			    );				
-					var olMap = $mapa.data().argenmap.mapa;
-					olMap.zoomToExtent(bounds, true);					
-				}
+			var srs = 'EPSG:3857';
+			if (!capa.Service.soporta.srs['EPSG:3857']) {
+				idera.alert('El servidor no soporta el SRS EPSG:3857');
+				if (!capa.Service.soporta.srs['EPSG:900913']) {
+					idera.alert('El servidor no soporta SRS EPSG:3857 ni EPSG:900913');
+					return;					
+				} else {
+					idera.alert('Probando SRS EPSG:900913',6000);
+					/*
+					algunos servidores
+					 mapserver que tienen la config en un archivo
+					 de nombre epsg escrito en minúscula,
+					 tiran error con EPSG:900913 en mayúsucla
+					*/
+					srs = 'EPSG:900913';
+				}	
+			}
+			var tieneBBox = true;
+			if (! capa.LatLonBoundingBox.minx) {
+				idera.alert('El servidor no informa BoundingBox');
+				tieneBBox = false;
+			}
 
-				
+			var $mapa = $('<div class="idera_mapa"></div>')
+				.css('height','100%').appendTo( idera.$el);
+			$mapa.argenmap();	
+			
+			$mapa.agregarCapaWMS(a={
+				url: capa.Service.urlReal,
+				capas: capa.Name,
+				nombre: capa.Title,
+				projection: srs,
+				srs:srs
 			});
 
+			if (tieneBBox) {
+				var bounds = new OpenLayers.Bounds();
+				bounds.extend(
+					new OpenLayers.LonLat(capa.LatLonBoundingBox.minx,capa.LatLonBoundingBox.miny)
+						.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection('EPSG:3857'))
+				);
+		    bounds.extend(
+		    	new OpenLayers.LonLat(capa.LatLonBoundingBox.maxx,capa.LatLonBoundingBox.maxy)
+		    		.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection('EPSG:3857'))
+		    );				
+				var olMap = $mapa.data().argenmap.mapa;
+				olMap.zoomToExtent(bounds, true);					
+			}
 
+				
 		}
 	
 
@@ -854,11 +936,12 @@
 		return this.each(function() {
 			var rev = $(this).data().idera;
 			if ( rev !== undefined) {			
-				var rev = $(this).data().idera;
-				renderMapa(rev, options);
+				rev.onReady(rev.opts.id_nodo, function() {
+					renderMapa(rev, rev.opts.id_nodo, options);
+				}, rev);
 			}
 		});
 
 	};
 
-})(jQuery);
+})(jQuery, window, document);
