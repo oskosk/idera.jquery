@@ -69,7 +69,7 @@
 				la IDERA (en formato JSON) en esta URL.
 			</p>
 			<p>
-				<code class="lead">http://oskosk.github.io/idera.jquery//servicios_wms.json</code>
+				<code class="lead">http://oskosk.github.io/idera.jquery/servicios_wms.json</code>
 			</p>			
 		</div>
 	</div>		
@@ -92,7 +92,7 @@ $(document).ready(function() {
 
 function mostrarServiciosWMS()
 {
-	$.getJSON('http://oskosk.github.io/idera.jquery//servicios_wms.json', function(servicios) {
+	$.getJSON('http://oskosk.github.io/idera.jquery/servicios_wms.json', function(servicios) {
 		$.each( servicios, function (k, v) {
 			$('#servicios_wms').append('<h4>'+v.title+'</h4>')
 				.append('<p><span>Servicio WMS</span>'
