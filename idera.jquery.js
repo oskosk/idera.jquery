@@ -123,9 +123,16 @@
 				// la carrgo y disparo el evento apenas termine de cargar
 				if (! CARGANDO_SERVIDORES_WMS ) {
 					CARGANDO_SERVIDORES_WMS = true;
+					// 2013-07-18. Cambié el json. antes era un objeto. ahora un array
+
+					SERVIDORES_WMS = {};
 					$.getJSON('http://mapa.ign.gob.ar/idera.jquery/servicios_wms.json', function(data) {
-						$.each(data, function(id, nodo) {
-							SERVIDORES_WMS[ id ] = nodo;
+						$(data).each(function(k, nodo) {
+							// KLUDGE: desde el 2013-07-8 el .json de idera es una array
+							// para no cambiar todo el código genero el objeto como
+							// el que devoolvía el .json antes.
+							SERVIDORES_WMS[ nodo.id ] = nodo;
+							console.log(SERVIDORES_WMS);
 						})
 						CARGANDO_SERVIDORES_WMS = false;					
 						$(_IDERA).trigger('idera.afterLoadServicesList', SERVIDORES_WMS);
